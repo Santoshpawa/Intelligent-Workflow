@@ -1,0 +1,32 @@
+#dashboardSearch {
+  display: flex;
+  justify-content: center;
+  margin: auto;
+  position: fixed;
+  bottom: 10px;
+  width: 80%;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+#dashboardSearch input {
+  width: 90%;
+  height: 40px;
+  padding: 10px;
+  font-size: 16px;
+  border: none;
+}
+
+#dashboardSearch input ::cue{
+    border: none;
+}
+
+#dashboardSearch button {
+  padding: 10px;
+  margin-left: 10px;
+  font-size: 16px;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
