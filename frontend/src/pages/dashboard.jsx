@@ -4,6 +4,7 @@ export default function Dashboard() {
   const [search, setSearch] = useState("");
   const [file, setFile] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [messages, setMessages] = useState([]);
   const fileInputRef = useRef(null);
 
   // handling drag events
@@ -22,23 +23,31 @@ export default function Dashboard() {
       setFile(droppedFile);
     }
   }
-  function handleFileChange(e){
+  function handleFileChange(e) {
     const selectedFile = e.target.files[0];
-    if(selectedFile){
+    if (selectedFile) {
       setFile(selectedFile);
     }
   }
 
-  function handleAttachFile(){
+  function handleAttachFile() {
     fileInputRef.current.click();
   }
-  function removeFile(){
+  function removeFile() {
     setFile(null);
     fileInputRef.current.value = null;
   }
 
   async function handleSearch(e) {
-    if (e.key == "Enter") {
+    if (e.key == "Enter" && (search.trim() || file)) {
+      const userMessage = {
+        text: search,
+        fileName: file ? file.name : null,
+      };
+      setMessages((prev) => [...prev, userMessage]);
+      setSearch("");
+      setFile(null);
+
       const formData = new FormData();
       formData.append("prompt", search);
       if (file) {
@@ -50,34 +59,61 @@ export default function Dashboard() {
         body: formData,
       });
       let data = await response.json();
-      console.log(data);
+      const aiMessage = { text: data.response };
+      setMessages((prev) => [...prev, aiMessage]);
     }
   }
 
   return (
-    <>
+    <div className="chat-container">
+      {/* for displaying the chat */}
+      <div className="messages-list">
+        {messages.map((msg, idx) => (
+          <div key={idx} className="message-row">
+            {/* We assume first message is user, second is AI. 
+              Ideally, add 'sender' to your message object! */}
+            <div
+              className={`message-bubble ${
+                idx % 2 === 0 ? "user-msg" : "ai-msg"
+              }`}
+            >
+              {msg.text}
+              {msg.fileName && (
+                <div
+                  style={{ fontSize: "11px", marginTop: "5px", opacity: 0.8 }}
+                >
+                  📁 {msg.fileName}
+                </div>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* for input search */}
       <div
         id="dashboardSearch"
+        className={isDragging ? "dragging" : ""}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
       >
-        {/* DISPLAY FILE NAME HERE */}
         {file && (
           <div className="selected-file-badge">
-            <span className="file-icon">📄</span>
-            <span className="file-name">{file.name}</span>
-            <button className="remove-file-btn" onClick={removeFile}>❌</button>
+            <span>📄 {file.name}</span>
+            <button className="remove-file-btn" onClick={removeFile}>
+              ✕
+            </button>
           </div>
         )}
         <input
           type="text"
-          placeholder="Ask your question"
+          placeholder="Ask anything..."
           onChange={(e) => setSearch(e.target.value)}
           onKeyDown={handleSearch}
+          value={search}
         />
         <button onClick={handleAttachFile}>📎</button>
-        {/* hidden input */}
         <input
           type="file"
           ref={fileInputRef}
@@ -86,6 +122,6 @@ export default function Dashboard() {
           accept=".pdf,.doc,.docx"
         />
       </div>
-    </>
+    </div>
   );
 }
