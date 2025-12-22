@@ -1,12 +1,9 @@
-
 {
   "version": 2,
+  "rewrites": [{ "source": "/(.*)", "destination": "backend/app/main.py" }],
   "functions": {
     "backend/app/main.py": {
       "runtime": "python"
     }
-  },
-  "rewrites": [
-    { "source": "/(.*)", "destination": "backend/app/main.py" }
-  ]
+  }
 }
