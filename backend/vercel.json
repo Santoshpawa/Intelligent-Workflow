@@ -8,8 +8,12 @@
   ],
   "routes": [
     {
-      "src": "/(.*)",
-      "dest": "backend/app/main.py"
+      "src": "/",
+      "dest": "/"
+    },
+    {
+      "src": "/search",
+      "dest": "/"
     }
   ]
 }
