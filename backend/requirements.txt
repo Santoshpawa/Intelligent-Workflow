@@ -1,6 +1,7 @@
-for creating virtual environment: .\venv\Scripts\activate
-for running:fastapi dev app/main.py
-"fastapi[standard]"
-sqlalchemy psycopg2
-pip install PyPDF2 python-multipart
-pip install google-generativeai
+fastapi[standard]
+sqlalchemy
+psycopg2-binary
+PyPDF2
+python-multipart
+google-generativeai
+python-dotenv
