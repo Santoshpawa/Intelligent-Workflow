@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv
 from fastapi import Depends
 from sqlalchemy.orm import Session
-from databaseConfig import get_db, ChatHistory
+from backend.app.databaseConfig import get_db, ChatHistory
 import google.generativeai as genai
 from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
