@@ -53,7 +53,7 @@ export default function Dashboard() {
       if (file) {
         formData.append("file", file);
       }
-      let response = await fetch(`https://intelligent-workflow-4j9l.vercel.app/search`, {
+      let response = await fetch(`https://intelligent-workflow.onrender.com/search`, {
         method: "POST",
         credentials: "include",
         body: formData,
