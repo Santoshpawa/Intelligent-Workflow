@@ -26,7 +26,7 @@ model = genai.GenerativeModel('gemini-3-flash-preview')
 
 origins = [
     "http://localhost:5173",
-    "https://intelligent-workflow-2455nd.netlify.app/"
+    "https://intelligent-workflow-2455nd.netlify.app"
 ]
 
 app.add_middleware(
