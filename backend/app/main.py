@@ -17,7 +17,7 @@ load_dotenv()
 Google_Api_Key = os.getenv("GOOGLE_API_KEY")
 
 genai.configure(api_key=Google_Api_Key)
-model = genai.GenerativeModel('gemini-3-flash-preview')
+model = genai.GenerativeModel('gemini-2.0-flash')
 
 # store chat session history of every user in database
 
