@@ -6,6 +6,7 @@ export default function Dashboard() {
   const [isDragging, setIsDragging] = useState(false);
   const [messages, setMessages] = useState([]);
   const fileInputRef = useRef(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   // handling drag events
   function handleDragOver(e) {
@@ -39,28 +40,38 @@ export default function Dashboard() {
   }
 
   async function handleSearch(e) {
-    if (e.key == "Enter" && (search.trim() || file)) {
-      const userMessage = {
-        text: search,
-        fileName: file ? file.name : null,
-      };
-      setMessages((prev) => [...prev, userMessage]);
-      setSearch("");
-      setFile(null);
+    setIsLoading(true);
+    try {
+      if (e.key == "Enter" && (search.trim() || file)) {
+        const userMessage = {
+          text: search,
+          fileName: file ? file.name : null,
+        };
+        setMessages((prev) => [...prev, userMessage]);
+        setSearch("");
+        setFile(null);
 
-      const formData = new FormData();
-      formData.append("prompt", search);
-      if (file) {
-        formData.append("file", file);
+        const formData = new FormData();
+        formData.append("prompt", search);
+        if (file) {
+          formData.append("file", file);
+        }
+        let response = await fetch(
+          `https://intelligent-workflow.onrender.com/search`,
+          {
+            method: "POST",
+            credentials: "include",
+            body: formData,
+          }
+        );
+        let data = await response.json();
+        const aiMessage = { text: data.response };
+        setMessages((prev) => [...prev, aiMessage]);
       }
-      let response = await fetch(`https://intelligent-workflow.onrender.com/search`, {
-        method: "POST",
-        credentials: "include",
-        body: formData,
-      });
-      let data = await response.json();
-      const aiMessage = { text: data.response };
-      setMessages((prev) => [...prev, aiMessage]);
+    } catch (error) {
+      console.error("Error fetching response:", error);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -90,6 +101,8 @@ export default function Dashboard() {
         ))}
       </div>
 
+      {isLoading && <div className="loading-indicator">Loading...(Backend Server takes 2 minutes to restart)</div>}
+
       {/* for input search */}
       <div
         id="dashboardSearch"
@@ -106,12 +119,14 @@ export default function Dashboard() {
             </button>
           </div>
         )}
+        
         <input
           type="text"
           placeholder="Ask anything..."
           onChange={(e) => setSearch(e.target.value)}
           onKeyDown={handleSearch}
           value={search}
+          disabled={isLoading}
         />
         <button onClick={handleAttachFile}>📎</button>
         <input
