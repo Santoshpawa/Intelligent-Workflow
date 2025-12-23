@@ -18,7 +18,7 @@ app = FastAPI(title="Gemini Backend")
 # 1. Setup Gemini Client
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 client = genai.Client(api_key=GOOGLE_API_KEY)
-MODEL_ID = "gemini-3-flash" 
+MODEL_ID = "gemini-3-flash-preview" 
 
 # CORS Setup
 origins = [
